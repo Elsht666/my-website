@@ -493,9 +493,213 @@
             .pan-icon-wrap { width: calc(42px * var(--card-scale)); height: calc(42px * var(--card-scale)); font-size: calc(18px * var(--card-scale)); border-radius: 11px; }
             .pan-card .pan-name { font-size: calc(14px * var(--card-scale)); }
         }
+
+        /* ==================== 访问校验弹窗 ==================== */
+        body.locked { overflow: hidden; }
+        body.locked #app,
+        body.locked header,
+        body.locked .copyright {
+            filter: blur(8px);
+            pointer-events: none;
+            user-select: none;
+            opacity: .4;
+            transition: filter .3s, opacity .3s;
+        }
+
+        .access-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .45);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            animation: accessFadeIn .25s ease;
+        }
+        .access-overlay.hide {
+            animation: accessFadeOut .3s ease forwards;
+            pointer-events: none;
+        }
+        @keyframes accessFadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes accessFadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; visibility: hidden; }
+        }
+
+        .access-box {
+            background: var(--bg);
+            border-radius: 22px;
+            padding: 34px 28px 28px;
+            width: 100%;
+            max-width: 380px;
+            box-shadow: 0 24px 70px rgba(0, 0, 0, .35);
+            animation: accessSlideIn .3s cubic-bezier(.175,.885,.32,1.275);
+            position: relative;
+            border: 1px solid rgba(127,127,127,.15);
+        }
+        [data-theme="light"] .access-box {
+            background: #ffffff;
+            box-shadow: 0 24px 70px rgba(0, 0, 0, .15);
+            border: 1px solid rgba(0,0,0,.06);
+        }
+        .access-box.hide {
+            animation: accessSlideOut .25s ease forwards;
+        }
+        @keyframes accessSlideIn {
+            from { transform: translateY(24px) scale(.94); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
+        }
+        @keyframes accessSlideOut {
+            to { transform: translateY(-20px) scale(.96); opacity: 0; }
+        }
+
+        .access-icon {
+            width: 58px;
+            height: 58px;
+            margin: 0 auto 16px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--card), var(--card-hover));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 8px 24px rgba(91,155,213,.35);
+        }
+        [data-theme="light"] .access-icon {
+            box-shadow: 0 8px 24px rgba(91,155,213,.28);
+        }
+
+        .access-title {
+            font-size: 20px;
+            font-weight: 700;
+            text-align: center;
+            margin: 0 0 8px;
+            color: var(--fg);
+        }
+
+        .access-desc {
+            font-size: 13px;
+            color: var(--muted);
+            text-align: center;
+            line-height: 1.6;
+            margin: 0 0 22px;
+            padding: 0 4px;
+        }
+
+        .access-code-wrap {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .access-code-input {
+            width: 50px;
+            height: 58px;
+            border: 2px solid rgba(127,127,127,.2);
+            border-radius: 14px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            background: rgba(127,127,127,.06);
+            color: var(--fg);
+            outline: none;
+            transition: border-color .2s, background .2s, transform .1s, box-shadow .2s;
+            -webkit-tap-highlight-color: transparent;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+        [data-theme="light"] .access-code-input {
+            background: rgba(0,0,0,.03);
+            border-color: rgba(0,0,0,.1);
+        }
+        .access-code-input:focus {
+            border-color: var(--card);
+            background: rgba(91,155,213,.08);
+            transform: scale(1.06);
+            box-shadow: 0 0 0 4px rgba(91,155,213,.12);
+        }
+        .access-code-input.error {
+            border-color: #ef4444;
+            background: rgba(239,68,68,.06);
+            animation: accessShake .4s ease;
+        }
+        @keyframes accessShake {
+            0%,100% { transform: translateX(0); }
+            20% { transform: translateX(-7px); }
+            40% { transform: translateX(7px); }
+            60% { transform: translateX(-5px); }
+            80% { transform: translateX(5px); }
+        }
+
+        .access-error {
+            text-align: center;
+            color: #ef4444;
+            font-size: 13px;
+            margin-bottom: 14px;
+            min-height: 18px;
+            opacity: 0;
+            transition: opacity .2s;
+        }
+        .access-error.show { opacity: 1; }
+
+        .access-btns {
+            display: flex;
+            gap: 10px;
+        }
+
+        .access-btn {
+            flex: 1;
+            padding: 12px 0;
+            border: 0;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .2s;
+            font-family: inherit;
+            touch-action: manipulation;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        .access-btn:active { transform: scale(0.96); }
+        .access-btn.cancel {
+            background: rgba(127,127,127,.12);
+            color: var(--muted);
+        }
+        .access-btn.cancel:hover {
+            background: rgba(127,127,127,.22);
+            color: var(--fg);
+        }
+        [data-theme="light"] .access-btn.cancel {
+            background: rgba(0,0,0,.05);
+        }
+        [data-theme="light"] .access-btn.cancel:hover {
+            background: rgba(0,0,0,.1);
+        }
+        .access-btn.confirm {
+            background: linear-gradient(135deg, var(--card), var(--card-hover));
+            color: #fff;
+            box-shadow: 0 6px 20px rgba(91,155,213,.35);
+        }
+        .access-btn.confirm:hover {
+            filter: brightness(1.06);
+            box-shadow: 0 8px 26px rgba(91,155,213,.45);
+        }
+
+        @media (max-width: 600px) {
+            .access-code-input { width: 46px; height: 54px; font-size: 22px; border-radius: 12px; }
+            .access-box { padding: 28px 22px 22px; border-radius: 20px; }
+            .access-icon { width: 52px; height: 52px; font-size: 25px; }
+            .access-title { font-size: 18px; }
+        }
     </style>
 </head>
-<body>
+<body class="locked">
 
     <header>
         <h1 id="pageTitle">资源下载</h1>
@@ -525,6 +729,26 @@
 
     <!-- Toast 提示 -->
     <div class="toast" id="toast"></div>
+
+    <!-- 访问校验弹窗 -->
+    <div class="access-overlay" id="accessOverlay">
+        <div class="access-box" id="accessBox">
+            <div class="access-icon">🔐</div>
+            <h2 class="access-title">访问校验</h2>
+            <p class="access-desc">本站为防范恶意攻击开启访问校验，<br>如需访问，请私信 UP 主，获取有效校验码</p>
+            <div class="access-code-wrap" id="accessCodeWrap">
+                <input class="access-code-input" type="text" maxlength="1" inputmode="numeric" autocomplete="one-time-code" />
+                <input class="access-code-input" type="text" maxlength="1" inputmode="numeric" autocomplete="one-time-code" />
+                <input class="access-code-input" type="text" maxlength="1" inputmode="numeric" autocomplete="one-time-code" />
+                <input class="access-code-input" type="text" maxlength="1" inputmode="numeric" autocomplete="one-time-code" />
+            </div>
+            <div class="access-error" id="accessError">验证码错误，请重新输入</div>
+            <div class="access-btns">
+                <button class="access-btn cancel" id="accessCancelBtn">重置</button>
+                <button class="access-btn confirm" id="accessConfirmBtn">确认访问</button>
+            </div>
+        </div>
+    </div>
 
     <script>
         /* ==================== 配置 ==================== */
@@ -758,6 +982,114 @@
                 showToast('页面不支持保存');
             }
         });
+
+        /* ==================== 访问校验 ==================== */
+        (function accessGuard(){
+            const ACCESS_CODE = '5168';
+            const overlay = document.getElementById('accessOverlay');
+            const box = document.getElementById('accessBox');
+            const wrap = document.getElementById('accessCodeWrap');
+            const errEl = document.getElementById('accessError');
+            const inputs = wrap.querySelectorAll('.access-code-input');
+            const confirmBtn = document.getElementById('accessConfirmBtn');
+            const cancelBtn = document.getElementById('accessCancelBtn');
+
+            function clearInputs() {
+                inputs.forEach(inp => { inp.value = ''; inp.classList.remove('error'); });
+                errEl.classList.remove('show');
+                inputs[0].focus();
+            }
+
+            function autoNext(idx) {
+                if (idx < inputs.length - 1 && inputs[idx].value) {
+                    inputs[idx + 1].focus();
+                }
+            }
+
+            function verify() {
+                const code = Array.from(inputs).map(i => i.value).join('');
+                if (code.length < 4) {
+                    errEl.textContent = '请输入完整的4位验证码';
+                    errEl.classList.add('show');
+                    inputs.forEach(i => { if (!i.value) i.classList.add('error'); });
+                    return;
+                }
+                if (code === ACCESS_CODE) {
+                    // 通过
+                    errEl.classList.remove('show');
+                    box.classList.add('hide');
+                    overlay.classList.add('hide');
+                    document.body.classList.remove('locked');
+                    setTimeout(() => { overlay.style.display = 'none'; }, 350);
+                } else {
+                    errEl.textContent = '验证码错误，请重新输入';
+                    errEl.classList.add('show');
+                    inputs.forEach(i => i.classList.add('error'));
+                    // 震动后清空并聚焦第一个
+                    setTimeout(() => {
+                        inputs.forEach((inp, idx) => { inp.value = ''; });
+                        inputs[0].focus();
+                    }, 450);
+                }
+            }
+
+            inputs.forEach((inp, idx) => {
+                inp.addEventListener('input', e => {
+                    // 仅保留数字，且最多1位
+                    const cleaned = inp.value.replace(/\D/g, '').slice(0, 1);
+                    inp.value = cleaned;
+                    inp.classList.remove('error');
+                    errEl.classList.remove('show');
+                    if (cleaned) autoNext(idx);
+                });
+                inp.addEventListener('keydown', e => {
+                    if (e.key === 'Backspace' && !inp.value && idx > 0) {
+                        e.preventDefault();
+                        inputs[idx - 1].focus();
+                        inputs[idx - 1].value = '';
+                        inputs[idx - 1].classList.remove('error');
+                    } else if (e.key === 'Enter') {
+                        e.preventDefault();
+                        verify();
+                    }
+                });
+                inp.addEventListener('paste', e => {
+                    e.preventDefault();
+                    const pasted = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '').slice(0, 4);
+                    if (!pasted) return;
+                    for (let i = 0; i < pasted.length && i < inputs.length; i++) {
+                        inputs[i].value = pasted[i];
+                        inputs[i].classList.remove('error');
+                    }
+                    errEl.classList.remove('show');
+                    if (pasted.length === 4) { verify(); }
+                    else { inputs[Math.min(pasted.length, inputs.length - 1)].focus(); }
+                });
+            });
+
+            confirmBtn.addEventListener('click', verify);
+            cancelBtn.addEventListener('click', clearInputs);
+
+            // 禁止 ESC 关闭弹窗
+            document.addEventListener('keydown', e => {
+                if (e.key === 'Escape' && !overlay.classList.contains('hide')) {
+                    e.preventDefault();
+                    clearInputs();
+                }
+            });
+
+            // 禁止点击遮罩关闭
+            overlay.addEventListener('click', e => {
+                if (e.target === overlay) {
+                    inputs[0].focus();
+                }
+            });
+
+            // 自动聚焦第一个输入框
+            window.addEventListener('load', () => {
+                setTimeout(() => inputs[0].focus(), 300);
+            });
+        })();
 
         /* ==================== 初始化 ==================== */
         (function init(){
