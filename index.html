@@ -979,10 +979,21 @@
             });
         }
 
-        /* ==================== 禁止 Ctrl+S / Cmd+S 保存网页 ==================== */
+        /* ==================== 禁止 F12 / Ctrl+U / Ctrl+Shift+I / Ctrl+S 等 ==================== */
         document.addEventListener('keydown', function(e){
-            if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='s'){
+            const k = (e.key || '').toLowerCase();
+            // F12 / Ctrl+Shift+I / Ctrl+Shift+J / Ctrl+Shift+C
+            if(k === 'f12' ||
+               (e.ctrlKey && e.shiftKey && (k === 'i' || k === 'j' || k === 'c'))){
                 e.preventDefault();
+                e.stopPropagation();
+                showToast('该操作已被禁止');
+                return;
+            }
+            // Ctrl+U 查看源代码 / Ctrl+S 保存
+            if((e.ctrlKey||e.metaKey)&&(k === 'u' || k === 's')){
+                e.preventDefault();
+                e.stopPropagation();
                 showToast('页面不支持保存');
             }
         });
