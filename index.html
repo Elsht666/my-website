@@ -19,7 +19,7 @@
             --pan-card-min-width: 340px;
             --pan-icon-size: 56px;
             --card-gap: 16px;
-            --grid-padding: 0 18px 80px 184px;
+            --grid-padding: 0 18px 80px 152px;
             /* 导航栏背景：与日夜按钮夜间背景一致 */
             --header-bg: linear-gradient(135deg, #070d1c, #111a30, #1c2a48);
         }
@@ -479,15 +479,15 @@
         /* ==================== 左侧竖向导航 ==================== */
         .side-nav {
             position: fixed;
-            left: 10px;
+            left: 6px;
             top: 96px;      /* 从顶部“资源下载”栏下方开始，不穿过该栏 */
             bottom: 20px;
             z-index: 500;
             display: flex;
             flex-direction: column;
-            padding: 18px 12px;
+            padding: 16px 10px;
             box-sizing: border-box;
-            border-radius: 24px;
+            border-radius: 22px;
             background: rgba(127, 127, 127, .25); /* 兼容回退（不支持 color-mix 的浏览器） */
             background: color-mix(in srgb, var(--bg) 82%, transparent);
             backdrop-filter: blur(12px);
@@ -498,12 +498,12 @@
         }
         .side-nav .nav-head {
             text-align: center;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 700;
-            letter-spacing: 4px;
-            text-indent: 4px;
+            letter-spacing: 3px;
+            text-indent: 3px;
             color: var(--muted);
-            padding: 2px 0 14px;
+            padding: 2px 0 12px;
             border-bottom: 1px solid rgba(127, 127, 127, .18);
             margin-bottom: 4px;
         }
@@ -512,18 +512,18 @@
             display: flex;
             flex-direction: column;
             justify-content: space-evenly;
-            gap: 10px;
+            gap: 8px;
         }
         .side-nav .nav-item {
             display: flex;
             align-items: center;
-            gap: 8px;
-            min-width: 100px;
-            padding: 12px 14px;
-            border-radius: 13px;
+            gap: 6px;
+            min-width: 94px;
+            padding: 10px 12px;
+            border-radius: 12px;
             color: var(--muted);
             text-decoration: none;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
             letter-spacing: .3px;
             transition: background .2s, color .2s, transform .15s, box-shadow .2s;
@@ -531,7 +531,7 @@
             user-select: none;
         }
         .side-nav .nav-item .nav-ico {
-            font-size: 20px;
+            font-size: 18px;
             line-height: 1;
             flex-shrink: 0;
         }
@@ -549,7 +549,7 @@
         @media (max-width: 760px) {
             .side-nav { display: none; }
             /* 导航隐藏后，恢复左侧空间，避免小屏浪费 */
-            main { padding: 0 18px 80px; }
+            #app { padding: 0 18px 80px; }
         }
 
         /* ==================== 主内容区 ==================== */
@@ -566,31 +566,15 @@
 
         .detail-container {
             width: min(1100px, 100%);
-            margin: 0 auto;
+            /* 靠左对齐，始终紧贴左侧导航（右侧自适应，避免宽屏时容器居中导致左侧空隙变大） */
+            margin-left: 0;
+            margin-right: auto;
             animation: fadeIn .25s ease;
         }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
-        }
-
-        .detail-title {
-            text-align: center;
-            font-size: calc(26px * var(--card-scale));
-            font-weight: 700;
-            letter-spacing: .5px;
-            margin-bottom: 8px;
-            color: var(--fg);
-        }
-
-        .title-divider {
-            width: 70px;
-            height: 4px;
-            background: var(--accent);
-            border-radius: 99px;
-            margin: 0 auto 20px;
-            opacity: .8;
         }
 
         /* ============ 本期分享详细介绍 ============ */
@@ -725,8 +709,8 @@
             border-radius: 99px;
         }
 
-        /* 备用链接区标题 */
-        .alt-section-title {
+        /* 区块标题（主卡片 / 副卡片） */
+        .section-title {
             text-align: center;
             font-size: calc(17px * var(--card-scale));
             font-weight: 700;
@@ -734,6 +718,22 @@
             color: var(--fg);
             margin: 36px 0 16px;
             opacity: .85;
+        }
+
+        /* ============ 彩色渐变分隔线 ============ */
+        .section-divider {
+            width: 100%;
+            height: 6px;
+            border-radius: 99px;
+            margin: 8px 0 34px;
+            background: linear-gradient(90deg,
+                var(--card),
+                #facc15 30%,
+                #f97316 55%,
+                var(--alt-card, #ef4444));
+            opacity: .95;
+            box-shadow: 0 2px 8px rgba(0,0,0,.12);
+            animation: fadeIn .5s ease both;
         }
 
         /* ============ 区块大横幅 ============ */
@@ -913,10 +913,8 @@
             .btn { padding: 8px 12px; font-size: 13px; }
             .size-btn { width: 28px; height: 28px; font-size: 14px; }
 
-            .detail-title { font-size: calc(22px * var(--card-scale)); }
-
             .pan-cards-row { flex-direction: column; gap: 14px; }
-            .alt-section-title { font-size: calc(15px * var(--card-scale)); margin: 26px 0 12px; }
+            .section-title { font-size: calc(15px * var(--card-scale)); margin: 26px 0 12px; }
             .pan-card {
                 padding: calc(22px * var(--card-scale)) calc(18px * var(--card-scale)) calc(20px * var(--card-scale));
                 min-width: auto;
@@ -932,7 +930,6 @@
         }
 
         @media (max-width: 380px) {
-            .detail-title { font-size: calc(19px * var(--card-scale)); }
             .pan-icon-wrap { width: calc(42px * var(--card-scale)); height: calc(42px * var(--card-scale)); font-size: calc(18px * var(--card-scale)); border-radius: 11px; }
             .pan-card .pan-name { font-size: calc(14px * var(--card-scale)); }
         }
@@ -1443,8 +1440,8 @@
             r.style.setProperty('--pan-icon-size',(56*cardScale)+'px');
             r.style.setProperty('--card-gap',(16*cardScale)+'px');
             const ph=Math.round(18*cardScale),pb=Math.round(80*cardScale);
-            /* 左侧 184px 固定为侧边导航预留空间（避免与卡片重叠，兼容不同浏览器滚动条宽度） */
-            r.style.setProperty('--grid-padding',`0 ${ph}px ${pb}px 184px`);
+            /* 左侧 152px 固定为侧边导航预留空间（导航右缘≈146，留约 6px 缝隙，兼容不同浏览器滚动条宽度） */
+            r.style.setProperty('--grid-padding',`0 ${ph}px ${pb}px 152px`);
             btnSizeDown.disabled=cardScale<=SCALE_MIN;
             btnSizeUp.disabled=cardScale>=SCALE_MAX;
             localStorage.setItem(LS_CARD_SCALE,String(cardScale));
@@ -1458,10 +1455,7 @@
             const bLink=shortLink(BAIDU.link);
             app.innerHTML=`
 <div class="detail-container">
-    <h2 class="detail-title" id="section-intro">寻找整理资源不易，关注up+三连</h2>
-    <div class="title-divider"></div>
-
-    <div class="intro-share">
+    <div class="intro-share" id="section-intro">
         <div class="share-title">📦 本期分享：DownKyiCore（哔哩下载姬跨平台版）</div>
         <p>支持 Windows / macOS / Linux，解压即用，无需补丁。</p>
 
@@ -1485,7 +1479,8 @@
         <p class="warn-share">⚠️ 下载后请仅作个人离线备份或者优质二次创作用途，不要用于抓取大会员/付费/番剧内容，风险自负。</p>
     </div>
 
-    <div class="pan-cards-row" id="section-main">
+    <div class="section-title" id="section-main">主卡片</div>
+    <div class="pan-cards-row">
         <div class="section-banner">DownKyiCore（哔哩下载姬跨平台版）</div>
         <div class="pan-card baidu">
             <div class="pan-icon-wrap">度</div>
@@ -1501,7 +1496,8 @@
         </div>
     </div>
 
-    <div class="alt-section-title" id="section-alt">副卡片</div>
+    <div class="section-divider"></div>
+    <div class="section-title" id="section-alt">副卡片</div>
     <div class="pan-cards-row">
         <div class="section-banner alt-banner">保存和记录登录状态（无需每次扫码）</div>
         <div class="pan-card baidu alt">
