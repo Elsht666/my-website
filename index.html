@@ -19,7 +19,7 @@
             --pan-card-min-width: 340px;
             --pan-icon-size: 56px;
             --card-gap: 16px;
-            --grid-padding: 0 18px 80px;
+            --grid-padding: 0 18px 80px 184px;
             /* 导航栏背景：与日夜按钮夜间背景一致 */
             --header-bg: linear-gradient(135deg, #070d1c, #111a30, #1c2a48);
         }
@@ -479,16 +479,17 @@
         /* ==================== 左侧竖向导航 ==================== */
         .side-nav {
             position: fixed;
-            left: 18px;
+            left: 10px;
             top: 96px;      /* 从顶部“资源下载”栏下方开始，不穿过该栏 */
             bottom: 20px;
             z-index: 500;
             display: flex;
             flex-direction: column;
-            padding: 22px 16px;
+            padding: 18px 12px;
             box-sizing: border-box;
-            border-radius: 26px;
-            background: color-mix(in srgb, var(--bg) 80%, transparent);
+            border-radius: 24px;
+            background: rgba(127, 127, 127, .25); /* 兼容回退（不支持 color-mix 的浏览器） */
+            background: color-mix(in srgb, var(--bg) 82%, transparent);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(127, 127, 127, .22);
@@ -497,32 +498,32 @@
         }
         .side-nav .nav-head {
             text-align: center;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 700;
-            letter-spacing: 6px;
-            text-indent: 6px;
+            letter-spacing: 4px;
+            text-indent: 4px;
             color: var(--muted);
-            padding: 2px 0 16px;
+            padding: 2px 0 14px;
             border-bottom: 1px solid rgba(127, 127, 127, .18);
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
         .side-nav .nav-list {
             flex: 1;
             display: flex;
             flex-direction: column;
             justify-content: space-evenly;
-            gap: 12px;
+            gap: 10px;
         }
         .side-nav .nav-item {
             display: flex;
             align-items: center;
-            gap: 10px;
-            min-width: 118px;
-            padding: 14px 16px;
-            border-radius: 14px;
+            gap: 8px;
+            min-width: 100px;
+            padding: 12px 14px;
+            border-radius: 13px;
             color: var(--muted);
             text-decoration: none;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             letter-spacing: .3px;
             transition: background .2s, color .2s, transform .15s, box-shadow .2s;
@@ -530,7 +531,7 @@
             user-select: none;
         }
         .side-nav .nav-item .nav-ico {
-            font-size: 22px;
+            font-size: 20px;
             line-height: 1;
             flex-shrink: 0;
         }
@@ -545,7 +546,11 @@
             box-shadow: 0 6px 18px rgba(0,0,0,.22);
         }
         body.locked .side-nav { opacity: 0; pointer-events: none; }
-        @media (max-width: 760px) { .side-nav { display: none; } }
+        @media (max-width: 760px) {
+            .side-nav { display: none; }
+            /* 导航隐藏后，恢复左侧空间，避免小屏浪费 */
+            main { padding: 0 18px 80px; }
+        }
 
         /* ==================== 主内容区 ==================== */
         main {
@@ -1438,7 +1443,8 @@
             r.style.setProperty('--pan-icon-size',(56*cardScale)+'px');
             r.style.setProperty('--card-gap',(16*cardScale)+'px');
             const ph=Math.round(18*cardScale),pb=Math.round(80*cardScale);
-            r.style.setProperty('--grid-padding',`0 ${ph}px ${pb}px`);
+            /* 左侧 184px 固定为侧边导航预留空间（避免与卡片重叠，兼容不同浏览器滚动条宽度） */
+            r.style.setProperty('--grid-padding',`0 ${ph}px ${pb}px 184px`);
             btnSizeDown.disabled=cardScale<=SCALE_MIN;
             btnSizeUp.disabled=cardScale>=SCALE_MAX;
             localStorage.setItem(LS_CARD_SCALE,String(cardScale));
@@ -1495,7 +1501,7 @@
         </div>
     </div>
 
-    <div class="alt-section-title" id="section-alt">副卡片 · 第三个链接</div>
+    <div class="alt-section-title" id="section-alt">副卡片</div>
     <div class="pan-cards-row">
         <div class="section-banner alt-banner">保存和记录登录状态（无需每次扫码）</div>
         <div class="pan-card baidu alt">
