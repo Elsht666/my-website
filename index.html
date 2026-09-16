@@ -645,47 +645,47 @@
             will-change: transform;
         }
 
-        /* 顶部柔光装饰 */
-        .pan-card::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            border-radius: inherit;
-            background: linear-gradient(180deg, rgba(255,255,255,.12), transparent 38%);
-            pointer-events: none;
-        }
-
-        /* 悬浮：上浮 + 放大 + 光晕 */
+        /* 悬浮：上浮 + 放大 + 光晕（保持卡片原本颜色） */
         .pan-card:hover {
             transform: translateY(calc(-9px * var(--card-scale))) scale(1.02);
             box-shadow: 0 22px 46px rgba(0,0,0,.34);
-            border-color: rgba(255,255,255,.28);
         }
 
-        /* 悬浮扫光 */
-        .pan-card::before {
+        /* 悬浮：水波涟漪（以鼠标进入方向为锚点，石子落水效果，水波蓝） */
+        .pan-card > :not(.alt-badge):not(.ripple) { position: relative; z-index: 1; }
+        .ripple {
+            position: absolute;
+            z-index: 0;
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            pointer-events: none;
+            background: radial-gradient(circle, rgba(56,189,248,.5) 0%, rgba(56,189,248,.2) 45%, transparent 70%);
+            animation: rippleWave .7s ease-out forwards;
+        }
+        .ripple::after {
             content: "";
             position: absolute;
-            top: 0;
-            left: -80%;
-            width: 55%;
-            height: 100%;
-            background: linear-gradient(100deg, transparent, rgba(255,255,255,.38), transparent);
-            transform: skewX(-20deg);
-            transition: left .7s ease;
-            pointer-events: none;
+            inset: 0;
+            border-radius: 50%;
+            border: 2px solid rgba(56,189,248,.55);
+            animation: rippleRing .7s ease-out forwards;
         }
-        .pan-card:hover::before { left: 135%; }
+        @keyframes rippleWave {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: .9; }
+            60% { opacity: .45; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+        }
+        @keyframes rippleRing {
+            0% { transform: scale(.15); opacity: 1; }
+            100% { transform: scale(1.35); opacity: 0; }
+        }
 
         .pan-card.baidu { background: var(--card); }
-        .pan-card.baidu:hover { background: var(--card-hover); }
         /* 上面两个卡片统一为蓝色（跟随 --card，默认即为蓝色） */
         .pan-card.quark { background: var(--card); }
-        .pan-card.quark:hover { background: var(--card-hover); }
 
         /* 备用卡片颜色（可通过颜色选择器调整，默认红色） */
         .pan-card.alt { background: var(--alt-card, #ef4444); }
-        .pan-card.alt:hover { background: var(--alt-card-hover, #f87171); }
 
         /* 悬浮时图标轻微浮动，按钮抬升 */
         .pan-card:hover .pan-icon-wrap {
@@ -1594,6 +1594,30 @@
                 showToast('页面不支持保存');
             }
         });
+
+        /* ==================== 卡片水波涟漪（鼠标进入方向为锚点） ==================== */
+        (function rippleEffect(){
+            const appEl = document.getElementById('app');
+            if(!appEl) return;
+            appEl.addEventListener('mouseover', e => {
+                const card = e.target.closest('.pan-card');
+                if(!card) return;
+                // 仅在鼠标真正从外部进入卡片时触发，忽略卡片内部元素之间的移动
+                if(card.contains(e.relatedTarget)) return;
+                const rect = card.getBoundingClientRect();
+                const size = Math.ceil(Math.hypot(rect.width, rect.height) * 2);
+                const ripple = document.createElement('span');
+                ripple.className = 'ripple';
+                ripple.style.width = size + 'px';
+                ripple.style.height = size + 'px';
+                ripple.style.left = (e.clientX - rect.left) + 'px';
+                ripple.style.top = (e.clientY - rect.top) + 'px';
+                card.appendChild(ripple);
+                ripple.addEventListener('animationend', () => ripple.remove(), { once: true });
+                // 兜底清理：动画结束后无论事件是否触发都移除节点（如系统开启"减弱动态效果"）
+                setTimeout(() => ripple.remove(), 900);
+            });
+        })();
 
         /* ==================== 访问校验 ==================== */
         (function accessGuard(){
