@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 // 目标不在航线</title>
+<style>
+  :root{
+    --bg:#05070d;
+    --hud:#7fd8ff;
+    --warn:#ffb86b;
+    --err:#ff6b81;
+    --text:#cfd8e6;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);
+    font-family:"SF Mono",Consolas,"Microsoft YaHei",monospace;}
+  canvas#stars{position:fixed;inset:0;z-index:0;display:block}
+
+  .cockpit{position:fixed;inset:0;z-index:5;pointer-events:none;
+    box-shadow:inset 0 0 220px 60px rgba(0,0,0,.85), inset 0 0 60px 10px rgba(0,0,0,.6);}
+  .scanlines{position:fixed;inset:0;z-index:6;pointer-events:none;opacity:.18;
+    background:repeating-linear-gradient(0deg,rgba(255,255,255,.04) 0 1px,transparent 1px 3px);}
+
+  .hud{position:fixed;z-index:10;font-size:11px;letter-spacing:.15em;
+    color:var(--hud);text-shadow:0 0 8px rgba(127,216,255,.5);user-select:none}
+  .hud.tl{top:18px;left:22px}
+  .hud.tr{top:18px;right:22px;text-align:right}
+  .hud.bl{bottom:18px;left:22px}
+  .hud.br{bottom:18px;right:22px;text-align:right}
+  .hud .dim{color:#3d6a8a}
+  .hud .bad{color:var(--err);animation:blink 1.2s infinite}
+
+  .center{position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;text-align:center;padding:24px}
+
+  .code{font-size:clamp(80px,20vw,200px);font-weight:700;line-height:1;
+    color:transparent;-webkit-text-stroke:2px var(--err);
+    text-shadow:0 0 40px rgba(255,107,129,.35);letter-spacing:.05em;
+    animation:pulse 2.4s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:.85}50%{opacity:1;-webkit-text-stroke-color:#ff8fa0}}
+
+  .status{margin-top:18px;font-size:12px;letter-spacing:.4em;color:var(--err)}
+  .msg{margin-top:14px;font-size:15px;color:#e6edf7;letter-spacing:.1em}
+  .detail{margin-top:10px;font-size:11px;color:#7d8fa8;letter-spacing:.15em;line-height:1.9}
+
+  .radar{margin:26px 0 6px;width:180px;height:180px;position:relative}
+  .radar svg{width:100%;height:100%}
+  .radar .sweep{transform-origin:center;animation:spin 3.5s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .radar .nohit{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    font-size:10px;letter-spacing:.2em;color:var(--warn)}
+
+  .btns{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:18px}
+  a.btn{pointer-events:auto;cursor:pointer;text-decoration:none;
+    color:var(--hud);font-size:12px;letter-spacing:.25em;
+    padding:12px 28px;border:1px solid rgba(127,216,255,.4);
+    background:rgba(127,216,255,.04);transition:.25s}
+  a.btn:hover{background:rgba(127,216,255,.15);box-shadow:0 0 24px rgba(127,216,255,.25);color:#fff}
+  a.btn.primary{background:var(--hud);color:#04101c;font-weight:700}
+  a.btn.primary:hover{background:#a8e6ff;box-shadow:0 0 30px rgba(127,216,255,.6)}
+
+  .hint{position:fixed;bottom:60px;left:50%;transform:translateX(-50%);z-index:10;
+    font-size:10px;letter-spacing:.3em;color:#3d6a8a;animation:blink 2.4s infinite}
+  @keyframes blink{0%,100%{opacity:.4}50%{opacity:1}}
+
+  /* 漂浮的宇航员 */
+  .astro{position:fixed;z-index:3;pointer-events:none;opacity:.7;
+    filter:drop-shadow(0 0 20px rgba(127,216,255,.2));
+    animation:float 8s ease-in-out infinite}
+  .astro.a{right:12%;top:18%;width:80px}
+  .astro.b{left:10%;bottom:20%;width:56px;animation-delay:-4s;opacity:.45}
+  @keyframes float{0%,100%{transform:translateY(0) rotate(-8deg)}50%{transform:translateY(-20px) rotate(-4deg)}}
+</style>
+</head>
+<body>
+<canvas id="stars"></canvas>
+
+<!-- 漂浮宇航员 SVG（简笔画） -->
+<svg class="astro a" viewBox="0 0 64 64">
+  <g fill="none" stroke="#cfd8e6" stroke-width="2">
+    <circle cx="32" cy="20" r="9"/>
+    <rect x="24" y="30" width="16" height="18" rx="4"/>
+    <line x1="24" y1="34" x2="14" y2="42"/>
+    <line x1="40" y1="34" x2="50" y2="40"/>
+    <line x1="28" y1="48" x2="24" y2="58"/>
+    <line x1="36" y1="48" x2="42" y2="56"/>
+    <circle cx="30" cy="19" r="2" fill="#7fd8ff"/>
+  </g>
+</svg>
+<svg class="astro b" viewBox="0 0 64 64">
+  <g fill="none" stroke="#7fd8ff" stroke-width="2">
+    <circle cx="32" cy="20" r="9"/>
+    <rect x="24" y="30" width="16" height="18" rx="4"/>
+    <line x1="24" y1="34" x2="14" y2="42"/>
+    <line x1="40" y1="34" x2="50" y2="40"/>
+  </g>
+</svg>
+
+<div class="cockpit"></div>
+<div class="scanlines"></div>
+
+<div class="hud tl">LAB // NAVIGATION<br><span class="dim">SYS.STATUS : <span class="bad">FAULT</span></span></div>
+<div class="hud tr">TARGET ID : <span id="path">---</span><br><span class="dim">LOCK : <span class="bad">NO</span></span></div>
+<div class="hud bl">SCAN : COMPLETE<br><span class="dim">HITS : 0</span></div>
+<div class="hud br">DRIFT : 12.4 km/s<br><span class="dim">CREW : OK</span></div>
+
+<div class="center">
+  <div class="code">404</div>
+  <div class="status">TARGET NOT FOUND · 目标不在航线上</div>
+  <div class="radar">
+    <svg viewBox="0 0 200 200">
+      <circle cx="100" cy="100" r="90" fill="none" stroke="#3d6a8a" stroke-width="1"/>
+      <circle cx="100" cy="100" r="60" fill="none" stroke="#3d6a8a" stroke-width="1"/>
+      <circle cx="100" cy="100" r="30" fill="none" stroke="#3d6a8a" stroke-width="1"/>
+      <line x1="100" y1="5" x2="100" y2="195" stroke="#3d6a8a" stroke-width="1"/>
+      <line x1="5" y1="100" x2="195" y2="100" stroke="#3d6a8a" stroke-width="1"/>
+      <g class="sweep">
+        <path d="M100,100 L100,10 A90,90 0 0,1 164,36 Z" fill="rgba(127,216,255,.15)"/>
+        <line x1="100" y1="100" x2="100" y2="10" stroke="#7fd8ff" stroke-width="1.5"/>
+      </g>
+    </svg>
+    <div class="nohit">NO CONTACT</div>
+  </div>
+  <div class="msg">你要找的资源，已经飘出了这片星域</div>
+  <div class="detail">
+    请求坐标 <span id="path2">/unknown</span> 未登记在星图中 · 可能已被移动 / 删除 / 从未存在<br>
+    
+  </div>
+  <div class="btns">
+    <a class="btn" href="javascript:history.back()">后退一格</a>
+  </div>
+</div>
+
+<div class="hint">◈ 这片星域没有你要的目标 ◈</div>
+
+<script>
+const cv=document.getElementById('stars'),cx=cv.getContext('2d');
+let W,H,stars=[],mouse={x:0,y:0,tx:0,ty:0};
+function resize(){W=cv.width=innerWidth;H=cv.height=innerHeight;
+  stars=Array.from({length:240},()=>({
+    x:(Math.random()-.5)*W*2, y:(Math.random()-.5)*H*2,
+    z:Math.random()*1+.2, r:Math.random()*1.4+.2,
+    tw:Math.random()*Math.PI*2
+  }));
+}
+addEventListener('resize',resize);resize();
+addEventListener('mousemove',e=>{
+  mouse.tx=(e.clientX/innerWidth-.5); mouse.ty=(e.clientY/innerHeight-.5);
+});
+
+// 把当前 URL 路径显示到 HUD
+const p=location.pathname.split('/').pop()||'/';
+document.getElementById('path').textContent=p.slice(0,12).toUpperCase();
+document.getElementById('path2').textContent=location.pathname;
+
+function frame(){
+  mouse.x+=(mouse.tx-mouse.x)*.05; mouse.y+=(mouse.ty-mouse.y)*.05;
+  cx.fillStyle='rgba(5,7,13,1)';cx.fillRect(0,0,W,H);
+  const t=Date.now()/1000;
+  for(const s of stars){
+    const px=W/2 + s.x*s.z + mouse.x*80*s.z;
+    const py=H/2 + s.y*s.z + mouse.y*80*s.z;
+    const a=.5+.5*Math.sin(t*2+s.tw);
+    cx.beginPath();cx.arc(px,py,s.r*s.z,0,7);
+    cx.fillStyle=`rgba(200,225,255,${a*.8*s.z})`;cx.fill();
+  }
+  requestAnimationFrame(frame);
+}
+frame();
+</script>
+</body>
+</html>
