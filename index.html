@@ -44,50 +44,51 @@
 
     .code {
       line-height: 0;
-      margin-bottom: 16px;
-      filter: drop-shadow(0 6px 14px rgba(229, 62, 62, 0.25));
+      margin-bottom: 20px;
+      filter: drop-shadow(0 8px 18px rgba(229, 62, 62, 0.28));
       animation: pulse 2.4s ease-in-out infinite;
     }
     @keyframes pulse {
       0%, 100% { transform: scale(1);    opacity: 1; }
-      50%      { transform: scale(1.04); opacity: 0.85; }
+      50%      { transform: scale(1.04); opacity: 0.88; }
     }
 
     .msg {
-      margin-top: 16px; font-size: 20px; font-weight: 700; color: var(--text);
-      letter-spacing: 0.06em; background: rgba(255, 255, 255, 0.8); padding: 8px 24px;
-      border-radius: 40px; backdrop-filter: blur(4px); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+      margin-top: 8px; font-size: 26px; font-weight: 700; color: var(--text);
+      letter-spacing: 0.07em; background: rgba(255, 255, 255, 0.85); padding: 12px 36px;
+      border-radius: 60px; backdrop-filter: blur(4px); box-shadow: 0 5px 14px rgba(0, 0, 0, 0.04);
       border: 1px solid rgba(203, 213, 224, 0.6);
     }
 
-    .detail { margin-top: 24px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+    .detail { margin-top: 40px; display: flex; flex-direction: column; align-items: center; gap: 24px; }
 
     .offline-date {
-      font-size: 14px; color: #c9d1e0; letter-spacing: 0.06em;
+      font-size: 18px; color: #c9d1e0; letter-spacing: 0.06em;
       background: linear-gradient(180deg, #3a3f4b 0%, #2b2f3a 50%, #1f222b 50%, #171a21 100%);
-      padding: 12px 22px; border-radius: 12px;
+      padding: 15px 32px; border-radius: 14px;
       box-shadow:
-        0 4px 0 #0b0c10,
-        0 6px 14px rgba(0, 0, 0, 0.25),
+        0 5px 0 #0b0c10,
+        0 8px 18px rgba(0, 0, 0, 0.28),
         inset 0 1px 0 rgba(255, 255, 255, 0.06);
       border: 1px solid rgba(255, 255, 255, 0.05);
     }
     .offline-date strong {
       color: #ff5b5b;
       font-weight: 700;
-      margin: 0 3px;
+      margin: 0 5px;
+      font-size: 1.05em;
       font-variant-numeric: tabular-nums;
-      text-shadow: 0 0 10px rgba(255, 91, 91, 0.35);
+      text-shadow: 0 0 12px rgba(255, 91, 91, 0.4);
     }
 
     .time-dashboard {
-      display: flex; align-items: center; justify-content: center; gap: 10px;
-      background: rgba(255, 255, 255, 0.85); padding: 20px 28px; border-radius: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.9); box-shadow: 0 8px 24px rgba(43, 108, 176, 0.08);
+      display: flex; align-items: center; justify-content: center; gap: 14px;
+      background: rgba(255, 255, 255, 0.9); padding: 26px 36px; border-radius: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.95); box-shadow: 0 10px 28px rgba(43, 108, 176, 0.09);
       backdrop-filter: blur(8px); flex-wrap: wrap;
     }
 
-    .time-label { font-size: 16px; color: var(--text); font-weight: bold; margin-right: 8px; }
+    .time-label { font-size: 21px; color: var(--text); font-weight: bold; margin-right: 10px; letter-spacing: 0.05em; }
 
     /* ===== 翻牌（flip clock）样式 ===== */
     /* 单个时间块：深色立体方牌，底部一条标签条 */
@@ -95,12 +96,12 @@
       position: relative;
       display: flex; flex-direction: column; align-items: stretch;
       background: linear-gradient(180deg, #3a3f4b 0%, #2b2f3a 50%, #1f222b 50%, #171a21 100%);
-      border-radius: 10px;
-      width: 88px;
+      border-radius: 14px;
+      width: 140px;
       padding: 0;
       box-shadow:
-        0 5px 0 #0b0c10,
-        0 8px 18px rgba(0, 0, 0, 0.35),
+        0 7px 0 #0b0c10,
+        0 12px 26px rgba(0, 0, 0, 0.4),
         inset 0 1px 0 rgba(255, 255, 255, 0.06);
       overflow: hidden;
     }
@@ -108,9 +109,9 @@
     /* 数字显示区：正方形 */
     .digit-wrap {
       position: relative;
-      width: 88px;
-      height: 88px;
-      perspective: 260px;
+      width: 140px;
+      height: 140px;
+      perspective: 380px;
     }
 
     /* 中间分割线（压在数字区中线） */
@@ -118,9 +119,9 @@
       content: '';
       position: absolute;
       left: 0; right: 0; top: 50%;
-      height: 1.5px;
-      background: rgba(0, 0, 0, 0.55);
-      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05);
+      height: 2px;
+      background: rgba(0, 0, 0, 0.6);
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06);
       z-index: 3;
       pointer-events: none;
     }
@@ -130,20 +131,20 @@
       position: absolute;
       inset: 0;
       display: flex; align-items: center; justify-content: center;
-      font-size: 56px;
+      font-size: 90px;
       font-weight: 800;
       line-height: 1;
       color: #eef2f8;
       font-variant-numeric: tabular-nums;
-      text-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
+      text-shadow: 0 3px 0 rgba(0, 0, 0, 0.35);
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
     }
     .digit.highlight {
       color: #ff5b5b;
       text-shadow:
-        0 0 14px rgba(255, 91, 91, 0.45),
-        0 2px 0 rgba(0, 0, 0, 0.35);
+        0 0 24px rgba(255, 91, 91, 0.55),
+        0 4px 0 rgba(0, 0, 0, 0.35);
     }
     /* 背面初始朝下藏起来 */
     .digit-back {
@@ -154,16 +155,16 @@
     .time-unit {
       display: block;
       background: #14161c;
-      color: #7d8595;
-      font-size: 11px;
-      letter-spacing: 0.3em;
+      color: #8a93a3;
+      font-size: 14px;
+      letter-spacing: 0.4em;
       text-align: center;
-      padding: 5px 0 6px;
+      padding: 9px 0 11px;
       margin: 0;
       border-top: 1px solid rgba(0, 0, 0, 0.4);
     }
 
-    .time-sep { font-size: 20px; color: #94a3b8; font-weight: bold; margin: 0 2px; }
+    .time-sep { font-size: 38px; color: #94a3b8; font-weight: bold; margin: 0 4px; }
 
     /* 翻牌动画：前半段 front 翻下，后半段 back 翻上 */
     @keyframes frontDown {
@@ -183,7 +184,7 @@
       transform-origin: center 50%;
     }
 
-    .radar { margin: 32px 0 10px; width: 140px; height: 140px; position: relative; opacity: 0.85; }
+    .radar { display: none; margin: 32px 0 10px; width: 140px; height: 140px; position: relative; opacity: 0.85; }
     .radar svg { width: 100%; height: 100%; }
     .radar .sweep { transform-origin: center; animation: spin 4s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
@@ -203,16 +204,17 @@
     }
 
     @media (max-width: 600px) {
-      .msg { font-size: 16px; padding: 6px 16px; }
-      .radar { width: 110px; height: 110px; margin: 20px 0 6px; }
+      .code svg { width: 140px; height: 154px; }
+      .msg { font-size: 20px; padding: 10px 24px; }
+      .offline-date { font-size: 15px; padding: 12px 20px; }
       .astro.a { width: 60px; right: 4%; top: 10%; }
       .astro.b { width: 44px; left: 4%; bottom: 12%; }
-      .time-dashboard { padding: 14px 16px; gap: 6px; }
-      .time-block { width: 56px; border-radius: 8px; box-shadow: 0 3px 0 #0b0c10, 0 5px 12px rgba(0,0,0,0.3); }
-      .digit-wrap { width: 56px; height: 56px; }
-      .digit { font-size: 32px; }
-      .time-unit { font-size: 9px; letter-spacing: 0.2em; padding: 3px 0 4px; }
-      .time-label { font-size: 14px; width: 100%; text-align: center; margin-bottom: 8px; margin-right: 0; }
+      .time-dashboard { padding: 20px; gap: 8px; border-radius: 20px; }
+      .time-block { width: 96px; border-radius: 12px; box-shadow: 0 5px 0 #0b0c10, 0 8px 18px rgba(0,0,0,0.35); }
+      .digit-wrap { width: 96px; height: 96px; }
+      .digit { font-size: 58px; }
+      .time-unit { font-size: 12px; letter-spacing: 0.3em; padding: 6px 0 8px; }
+      .time-label { font-size: 18px; width: 100%; text-align: center; margin-bottom: 8px; margin-right: 0; }
       .time-sep { display: none; }
     }
   </style>
@@ -245,7 +247,7 @@
 
   <div class="center">
     <div class="code" id="main-code">
-      <svg viewBox="0 0 100 110" width="120" height="132" aria-label="秒表">
+      <svg viewBox="0 0 100 110" width="190" height="209" aria-label="秒表">
         <!-- 顶部按钮 -->
         <rect x="44" y="4" width="12" height="10" rx="2.5" fill="#ff5b5b"/>
         <!-- 两侧按钮 -->
